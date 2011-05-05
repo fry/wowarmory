@@ -87,11 +87,11 @@ namespace wowarmory.Chat {
         }
 
         void module_OnMessageWhisper(ChatModule module, Message message) {
-            throw new NotImplementedException();
+            IrcSendMessage(String.Format("whisper <{0}> {1}", message.CharacterName, message.Body));
         }
 
         void module_OnMessageOfficerChat(ChatModule module, Message message) {
-            throw new NotImplementedException();
+            IrcSendMessage(String.Format("officer <{0}> {1}", message.CharacterName, message.Body));
         }
 
         void module_OnMessageGuildChat(ChatModule module, Message message) {

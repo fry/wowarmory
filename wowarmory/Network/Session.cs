@@ -5,6 +5,7 @@ using System.Text;
 using wowarmory.SRP;
 using System.Diagnostics;
 using System.Timers;
+using System.Security.Cryptography;
 
 namespace wowarmory.Network {
     public class Session {
@@ -41,6 +42,9 @@ namespace wowarmory.Network {
             var request = new Request("/authenticate1");
             var Abytes = srp.GetChallengeA();
 
+            // TODO: "lol". 40-byte deviceId
+            //var hash = MD5.Create().ComputeHash(Encoding.Default.GetBytes(accountName)).ToHexString();
+            //var deviceId = hash + hash.Substring(0, 8);
 
             request["screenRes"] = "PHONE_MEDIUM";
             request["device"] = "iPhone";
@@ -51,7 +55,7 @@ namespace wowarmory.Network {
             request["deviceTimeZoneId"] = "Europe/Berlin";
             request["clientA"] = Abytes;
             request["appId"] = "Armory";
-            request["deviceId"] = "27f767358b3fdd7ea1418901b60c259617f49b2b";
+            //request["deviceId"] = deviceId; // everything is fine without sending one so let's do that
             request["emailAddress"] = accountName;
             request["deviceTimeZone"] = "7200000";
             request["locale"] = "en_GB";

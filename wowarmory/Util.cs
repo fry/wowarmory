@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 namespace wowarmory {
     public static class Util {
         public static string ToHexString(this byte[] data) {
-            return String.Join("", data.Select(e => e.ToString("2x")).ToArray());
+            return String.Join("", data.Select(e => e.ToString("X2")).ToArray()).ToLowerInvariant();
         }
 
         public static BigInteger ToPositiveBigInt(this byte[] data) {
