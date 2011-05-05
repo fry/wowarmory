@@ -25,6 +25,10 @@ Problems
   important, but for completeness sake should be done at some point.
 - The code and design, even at its current size is a mess
 
+- This is more of a problem with Blizzard, which is that at the time of this
+  writing guild chat doesn't work on a bunch of servers. If it does not work on
+  your server, you will get a "Disconnected from chat server" error a few
+  seconds after sending the login message.
 
 Armory Address
 --------------
