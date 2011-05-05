@@ -26,8 +26,8 @@ namespace wowarmory.Network {
             Connection.OnConnectionClosed += new Network.Connection.OnConnectionStateChangeDelegate(OnConnectionClosed);
             Connection.OnResponseReceived += new Network.Connection.OnResponseReceivedDelegate(OnReceiveResponse);
 
-            Trace.Listeners.Add(new TextWriterTraceListener("packets.txt"));
-            Trace.AutoFlush = true;
+            //Trace.Listeners.Add(new TextWriterTraceListener("packets.txt"));
+            //Trace.AutoFlush = true;
         }
 
         public void Start(string accountName, string password) {
