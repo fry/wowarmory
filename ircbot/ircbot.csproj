@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D13EE515-4AB8-42AA-AF65-21372B75F34A}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{AD2F6D26-886B-4B65-B852-0C7BE764F706}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>wowarmory</RootNamespace>
-    <AssemblyName>wowarmory</AssemblyName>
+    <RootNamespace>ircbot</RootNamespace>
+    <AssemblyName>ircbot</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -33,16 +33,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Meebey.SmartIrc4net">
       <HintPath>..\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,19 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chat\IRCBridge.cs" />
-    <Compile Include="Chat\Message.cs" />
-    <Compile Include="Chat\Presence.cs" />
-    <Compile Include="Network\BinaryReader.cs" />
-    <Compile Include="Network\BinaryWriter.cs" />
-    <Compile Include="Network\ChatModule.cs" />
-    <Compile Include="Network\Connection.cs" />
-    <Compile Include="Network\Session.cs" />
+    <Compile Include="IRCBridge.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Network\Request.cs" />
-    <Compile Include="Network\Response.cs" />
-    <Compile Include="SRP\ClientSRP.cs" />
-    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\wowarmory\wowarmory.csproj">
+      <Project>{D13EE515-4AB8-42AA-AF65-21372B75F34A}</Project>
+      <Name>wowarmory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

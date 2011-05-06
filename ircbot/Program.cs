@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Net.Sockets;
-using wowarmory.SRP;
 using wowarmory.Network;
-using System.Diagnostics;
 using System.IO;
+using System.Diagnostics;
 
-namespace wowarmory {
+namespace ircbot {
     class Program {
         static Session session;
         static void Main(string[] args) {
@@ -19,9 +17,9 @@ namespace wowarmory {
             }
 
             session = new Session();
-            
+
             var chat = new ChatModule(session, args[2], args[3]);
-            var irc = new Chat.IRCBridge(chat);
+            var irc = new IRCBridge(chat);
             irc.Start(args[4], args[5], args[6], "", 6667);
 
             session.Start(args[0], args[1]);
