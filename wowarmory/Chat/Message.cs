@@ -32,13 +32,14 @@ namespace wowarmory.Chat {
             Body = (string)response["body"];
 
             // TODO: special class to parse "from" data
-            if (FromType == CHAT_ID_TYPE_CHARACTER)
+            if (FromType == CHAT_ID_TYPE_CHARACTER || FromType == CHAT_ID_TYPE_GUILD_MEMBER)
                 CharacterId = (string)from["characterId"];
         }
 
         public string CharacterName {
             get {
-                return CharacterId.Substring(CharacterId.IndexOf(":"), CharacterId.LastIndexOf(":") + 1);
+                var first = CharacterId.IndexOf(":");
+                return CharacterId.Substring(first + 1, CharacterId.LastIndexOf(":") - first - 1);
             }
         }
 
