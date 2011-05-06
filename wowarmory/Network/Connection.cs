@@ -17,9 +17,9 @@ namespace wowarmory.Network {
         string host;
         int port;
 
-        bool closed = false;
+        bool closed = true;
 
-        TcpClient client = new TcpClient();
+        TcpClient client;
         Queue<Request> requestQueue = new Queue<Request>();
 
         public Connection(string host = "m.eu.wowarmory.com", int port = 8780) {
@@ -28,7 +28,10 @@ namespace wowarmory.Network {
         }
 
         public void Start() {
+            Close();
+
             closed = false;
+            client = new TcpClient();
             client.Connect(host, port);
 
             new Thread(new ThreadStart(HandleRequests)).Start();
@@ -36,13 +39,25 @@ namespace wowarmory.Network {
         }
 
         public void Close(string reason = "") {
-            if (closed)
+            if (IsClosed)
                 return;
+
+            closed = true;
+
+            lock (requestQueue) {
+                Monitor.Pulse(requestQueue);
+            }
 
             client.Close();
 
             if (OnConnectionClosed != null)
                 OnConnectionClosed();
+        }
+
+        public bool IsClosed {
+            get {
+                return closed || !client.Connected;
+            }
         }
 
         public void SendRequest(Request request) {
@@ -70,15 +85,16 @@ namespace wowarmory.Network {
         void HandleRequests() {
             var writer = new BinaryWriter(client.GetStream());
 
-            Request request;
-            while (client.Connected) {
+            while (!IsClosed) {
+                Request request = null;
                 lock (requestQueue) {
-                    while (requestQueue.Count == 0)
+                    while (requestQueue.Count == 0 && !IsClosed)
                         Monitor.Wait(requestQueue);
-                    request = requestQueue.Dequeue();
+                    if (requestQueue.Count > 0)
+                        request = requestQueue.Dequeue();
                 }
 
-                if (client.Connected)
+                if (!IsClosed && request != null)
                     request.WriteTo(writer);
             }
         }

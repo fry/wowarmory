@@ -37,9 +37,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Meebey.SmartIrc4net">
-      <HintPath>..\Meebey.SmartIrc4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -50,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chat\IRCBridge.cs" />
     <Compile Include="Chat\Message.cs" />
     <Compile Include="Chat\Presence.cs" />
     <Compile Include="Network\BinaryReader.cs" />

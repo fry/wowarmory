@@ -49,7 +49,7 @@ namespace wowarmory.SRP {
             var size = ModulusSize * 2;
             var bytes = new byte[size];
             random.NextBytes(bytes);
-            return bytes.ToPositiveBigInt() % modulus;
+            return (bytes.ToPositiveBigInt() % (modulus - 2)) + 2;
         }
 
         public byte[] GetChallengeA() {
@@ -59,6 +59,7 @@ namespace wowarmory.SRP {
         public byte[] CalculateAuth1Proof(string userHash, string sessionPassword, byte[] salt, byte[] bbytes) {
             var abytes = GetChallengeA();
             var B = bbytes.ToPositiveBigInt();
+            bbytes = bbytes.AdjustSize(ModulusSize);
             salt = salt.AdjustSize(SaltSize);
 
             var u = CalculateU(abytes, bbytes);
@@ -86,7 +87,7 @@ namespace wowarmory.SRP {
             var first_hash = hashing.ComputeHash(Encoding.ASCII.GetBytes(userHash + ":" + sessionPassword));
 
             // H(salt | H(userHash | : | sessionPassword))
-            var total = salt.Concat(first_hash).ToArray();
+            var total = salt.AdjustSize(SaltSize).Concat(first_hash).ToArray();
             return hashing.ComputeHash(total).ToPositiveBigInt();
         }
 

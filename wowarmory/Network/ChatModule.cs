@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Meebey.SmartIrc4net;
 using System.Threading;
 using System.Timers;
 
