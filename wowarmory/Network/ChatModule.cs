@@ -115,7 +115,7 @@ namespace wowarmory.Network {
             }
         }
 
-        public void SendMessage(string msg, string chatType = "guild_chat") {
+        public void SendMessage(string msg, string chatType = Chat.Message.CHAT_MSG_TYPE_GUILD_CHAT) {
             var request = new Request("/chat-guild");
             request["type"] = chatType;
             request["body"] = msg;

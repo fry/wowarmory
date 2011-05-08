@@ -6,17 +6,17 @@ using System.Text;
 namespace wowarmory.Chat {
     public class Message {
         // from["chatIdType"]
-        public static string CHAT_ID_TYPE_CHARACTER = "character";
-        public static string CHAT_ID_TYPE_GUILD = "guild";
-        public static string CHAT_ID_TYPE_GUILD_MEMBER = "guild_member";
+        public const string CHAT_ID_TYPE_CHARACTER = "character";
+        public const string CHAT_ID_TYPE_GUILD = "guild";
+        public const string CHAT_ID_TYPE_GUILD_MEMBER = "guild_member";
 
         // messageType
-        public static string CHAT_MSG_TYPE_AFK = "afk";
-        public static string CHAT_MSG_TYPE_DND = "dnd";
-        public static string CHAT_MSG_TYPE_GUILD_CHAT = "guild_chat";
-        public static string CHAT_MSG_TYPE_GUILD_MOTD = "motd";
-        public static string CHAT_MSG_TYPE_OFFICER_CHAT = "officer_chat";
-        public static string CHAT_MSG_TYPE_WHISPER = "whisper";
+        public const string CHAT_MSG_TYPE_AFK = "afk";
+        public const string CHAT_MSG_TYPE_DND = "dnd";
+        public const string CHAT_MSG_TYPE_GUILD_CHAT = "guild_chat";
+        public const string CHAT_MSG_TYPE_GUILD_MOTD = "motd";
+        public const string CHAT_MSG_TYPE_OFFICER_CHAT = "officer_chat";
+        public const string CHAT_MSG_TYPE_WHISPER = "whisper";
 
         public string Type;
         public string Body;

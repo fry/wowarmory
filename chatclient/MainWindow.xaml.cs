@@ -105,8 +105,30 @@ namespace chatclient {
         }
 
         private void chatEntry_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Key == Key.Return) {
-                chat.SendMessage(chatEntry.Text);
+            if (e.Key != Key.Return)
+                return;
+            var msg = chatEntry.Text;
+            if (msg.StartsWith("/")) {
+                var tokens = msg.Split(' ');
+                if (tokens[0] == "/whisper" || tokens[0] == "/w") {
+                    if (tokens.Length < 3) {
+                        chatLog.AppendLine("Usage: /whisper <target> <message>");
+                    } else {
+                        chat.SendWhisper(tokens[1], String.Join(" ", tokens, 2, tokens.Length - 2));
+                    }
+                } else if (tokens[0] == "/officer" || tokens[0] == "/o") {
+                    if (tokens.Length < 2) {
+                        chatLog.AppendLine("Usage: /officer <message>");
+                    } else {
+                        chat.SendMessage(String.Join(" ", tokens, 1, tokens.Length - 1), wowarmory.Chat.Message.CHAT_MSG_TYPE_OFFICER_CHAT);
+                    }
+                } else {
+                    chatLog.AppendLine("Unknown command: " + tokens[0]);
+                    chatLog.AppendLine("Available commands:");
+                    chatLog.AppendLine("/w, /whisper");
+                }
+            } else {
+                chat.SendMessage(msg);
                 chatEntry.Text = "";
             }
         }

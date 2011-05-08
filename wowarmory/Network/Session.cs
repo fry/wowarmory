@@ -94,7 +94,9 @@ namespace wowarmory.Network {
                 var errorMsg = (string)response["body"];
                 Console.WriteLine("error: " + errorMsg);
 
-                Connection.Close(errorMsg);
+                // If the error happens while initiating the session, close connection
+                if (stage != 4)
+                    Connection.Close(errorMsg);
                 return;
             }
 
