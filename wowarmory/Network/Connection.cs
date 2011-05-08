@@ -8,11 +8,13 @@ using System.Threading;
 
 namespace wowarmory.Network {
     public class Connection {
-        public delegate void OnConnectionStateChangeDelegate();
+        public delegate void OnConnectionClosedDelegate(string reason);
         public delegate void OnResponseReceivedDelegate(Response response);
+        public delegate void OnRequestSentDelegate(Request request);
 
-        public event OnConnectionStateChangeDelegate OnConnectionClosed;
+        public event OnConnectionClosedDelegate OnConnectionClosed;
         public event OnResponseReceivedDelegate OnResponseReceived;
+        public event OnRequestSentDelegate OnRequestSent;
 
         string host;
         int port;
@@ -51,7 +53,7 @@ namespace wowarmory.Network {
             client.Close();
 
             if (OnConnectionClosed != null)
-                OnConnectionClosed();
+                OnConnectionClosed(reason);
         }
 
         public bool IsClosed {
@@ -71,8 +73,11 @@ namespace wowarmory.Network {
             var reader = new BinaryReader(client.GetStream());
 
             try {
-                while (client.Connected) {
+                while (!IsClosed) {
                     var response = Response.Parse(reader);
+
+                    if (IsClosed)
+                        return;
 
                     if (OnResponseReceived != null)
                         OnResponseReceived(response);
@@ -94,8 +99,12 @@ namespace wowarmory.Network {
                         request = requestQueue.Dequeue();
                 }
 
-                if (!IsClosed && request != null)
+                if (!IsClosed && request != null) {
                     request.WriteTo(writer);
+
+                    if (OnRequestSent != null)
+                        OnRequestSent(request);
+                }
             }
         }
     }

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wowarmory", "wowarmory\wowa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ircbot", "ircbot\ircbot.csproj", "{AD2F6D26-886B-4B65-B852-0C7BE764F706}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chatclient", "chatclient\chatclient.csproj", "{E673D367-07AB-4B7B-A2F3-58CFC4E6AABE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -19,6 +21,10 @@ Global
 		{AD2F6D26-886B-4B65-B852-0C7BE764F706}.Debug|x86.Build.0 = Debug|x86
 		{AD2F6D26-886B-4B65-B852-0C7BE764F706}.Release|x86.ActiveCfg = Release|x86
 		{AD2F6D26-886B-4B65-B852-0C7BE764F706}.Release|x86.Build.0 = Release|x86
+		{E673D367-07AB-4B7B-A2F3-58CFC4E6AABE}.Debug|x86.ActiveCfg = Debug|x86
+		{E673D367-07AB-4B7B-A2F3-58CFC4E6AABE}.Debug|x86.Build.0 = Debug|x86
+		{E673D367-07AB-4B7B-A2F3-58CFC4E6AABE}.Release|x86.ActiveCfg = Release|x86
+		{E673D367-07AB-4B7B-A2F3-58CFC4E6AABE}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

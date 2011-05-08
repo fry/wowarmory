@@ -9,10 +9,11 @@ using System.Security.Cryptography;
 
 namespace wowarmory.Network {
     public class Session {
-        public delegate void OnSessionStateChangeDelegate();
+        public delegate void OnSessionEstablishedDelegate();
+        public delegate void OnSessionClosedDelegate(string reason);
 
-        public event OnSessionStateChangeDelegate OnSessionEstablished;
-        public event OnSessionStateChangeDelegate OnSessionClosed;
+        public event OnSessionEstablishedDelegate OnSessionEstablished;
+        public event OnSessionClosedDelegate OnSessionClosed;
         public event Connection.OnResponseReceivedDelegate OnResponseReceived;
 
         public readonly Connection Connection;
@@ -24,11 +25,11 @@ namespace wowarmory.Network {
         public Session() {
             Connection = new Connection();
 
-            Connection.OnConnectionClosed += new Network.Connection.OnConnectionStateChangeDelegate(OnConnectionClosed);
+            Connection.OnConnectionClosed += new Network.Connection.OnConnectionClosedDelegate(OnConnectionClosed);
             Connection.OnResponseReceived += new Network.Connection.OnResponseReceivedDelegate(OnReceiveResponse);
 
-            Trace.Listeners.Add(new TextWriterTraceListener("packets.txt"));
-            Trace.AutoFlush = true;
+            //Trace.Listeners.Add(new TextWriterTraceListener("packets.txt"));
+            //Trace.AutoFlush = true;
         }
 
         public void Start(string accountName, string password) {
@@ -79,8 +80,8 @@ namespace wowarmory.Network {
             Connection.SendRequest(request);
         }
 
-        public void Close() {
-            Connection.Close();
+        public void Close(string reason = "") {
+            Connection.Close(reason);
         }
 
         public void OnReceiveResponse(Response response) {
@@ -90,7 +91,10 @@ namespace wowarmory.Network {
             Trace.WriteLine("-".Multiply(80));
 
             if (response.Status != 200) { // TODO: handle these
-                Console.WriteLine("error: " + response["body"]);
+                var errorMsg = (string)response["body"];
+                Console.WriteLine("error: " + errorMsg);
+
+                Connection.Close(errorMsg);
                 return;
             }
 
@@ -135,9 +139,9 @@ namespace wowarmory.Network {
             return password.ToUpperInvariant();
         }
 
-        public void OnConnectionClosed() {
+        public void OnConnectionClosed(string reason) {
             if (OnSessionClosed != null)
-                OnSessionClosed();
+                OnSessionClosed(reason);
 
             stage = 0;
         }

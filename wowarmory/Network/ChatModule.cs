@@ -9,11 +9,13 @@ namespace wowarmory.Network {
     public class ChatModule {
         public delegate void OnMessageDelegate(ChatModule module, Chat.Message message);
         public delegate void OnPresenceDelegate(ChatModule module, Chat.Presence presence);
+        public delegate void OnChatLoggedOutDelegate();
 
         public event OnMessageDelegate OnMessageMOTD;
         public event OnMessageDelegate OnMessageGuildChat;
         public event OnMessageDelegate OnMessageOfficerChat;
         public event OnMessageDelegate OnMessageWhisper;
+        public event OnChatLoggedOutDelegate OnChatLoggedOut;
 
         public event OnPresenceDelegate OnPresenceChange;
 
@@ -32,12 +34,19 @@ namespace wowarmory.Network {
             keepAliveTimer.Elapsed += new ElapsedEventHandler(keepAliveTimer_Elapsed);
 
             session.OnResponseReceived += new Connection.OnResponseReceivedDelegate(OnResponseReceived);
-            session.OnSessionEstablished += new Session.OnSessionStateChangeDelegate(OnSessionEstablished);
-            session.OnSessionClosed += new Session.OnSessionStateChangeDelegate(OnSessionClosed);
+            session.OnSessionEstablished += new Session.OnSessionEstablishedDelegate(OnSessionEstablished);
+            session.OnSessionClosed += new Session.OnSessionClosedDelegate(OnSessionClosed);
         }
 
-        void OnSessionClosed() {
-            Console.WriteLine("Connection closed");
+
+        void OnSessionClosed(string reason) {
+            
+        }
+
+        public void Close() {
+            var request = new Request("/chat-logout");
+            request["chatSessionId"] = chatSessionId;
+            session.Connection.SendRequest(request);
         }
 
         void keepAliveTimer_Elapsed(object sender, ElapsedEventArgs e) {
@@ -64,7 +73,10 @@ namespace wowarmory.Network {
 
 
         public void OnResponseReceived(Response response) {
-            if (response.Target == "/chat-login") {
+            if (response.Target == "/chat-logout") {
+                if (OnChatLoggedOut != null)
+                    OnChatLoggedOut();
+            } else if (response.Target == "/chat-login") {
                 Console.WriteLine("Logged into chat");
                 chatSessionId = (string)response["chatSessionId"];
             } else  if (response.Target == "/chat") {
@@ -86,6 +98,9 @@ namespace wowarmory.Network {
                     } else if (message.Type == Chat.Message.CHAT_MSG_TYPE_WHISPER) {
                         if (OnMessageWhisper != null)
                             OnMessageWhisper(this, message);
+                    } else if (message.Type == Chat.Message.CHAT_MSG_TYPE_OFFICER_CHAT) {
+                        if (OnMessageOfficerChat != null)
+                            OnMessageOfficerChat(this, message);
                     } else {
                         Console.WriteLine("unhandled message type: " + message.Type);
                     }
