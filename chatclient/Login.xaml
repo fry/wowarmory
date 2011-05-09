@@ -22,11 +22,11 @@
         <Label Grid.Row="2" Grid.Column="0">Character:</Label>
         <Label Grid.Row="3" Grid.Column="0">Realm:</Label>
 
-        <TextBox Grid.Row="0" Grid.Column="1" Name="accountName" MinWidth="150"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="accountName" MinWidth="150" Text="{Binding Path=AccountName}"/>
         <PasswordBox Grid.Row="1" Grid.Column="1" Name="accountPassword" MinWidth="150"/>
 
-        <TextBox Grid.Row="2" Grid.Column="1" Name="characterName" MinWidth="150"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Name="realmName" MinWidth="150"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Name="characterName" MinWidth="150" Text="{Binding Path=CharacterName}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Name="realmName" MinWidth="150" Text="{Binding Path=RealmName}"/>
 
         <Button Grid.Row="4" Grid.Column="1" Click="Login_Click">Login</Button>
     </Grid>

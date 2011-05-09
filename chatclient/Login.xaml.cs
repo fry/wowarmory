@@ -18,6 +18,8 @@ namespace chatclient {
     public partial class Login: Window {
         public Login() {
             InitializeComponent();
+
+            DataContext = Properties.Settings.Default;
         }
 
         private void Login_Click(object sender, RoutedEventArgs e) {
@@ -30,6 +32,8 @@ namespace chatclient {
 
         void mainWindow_Closed(object sender, EventArgs e) {
             Show();
+
+            Properties.Settings.Default.Save();
         }
     }
 }
