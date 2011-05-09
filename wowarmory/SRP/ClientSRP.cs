@@ -30,11 +30,10 @@ namespace wowarmory.SRP {
 
         public ClientSRP() {
             a = RandomCrypt();
-            A = BigInteger.ModPow(g, a, modulus);
+            A = Util.PositiveModPow(g, a, modulus);
 
             var data = modulusBytes.Concat(g.ToByteArray()).ToArray();
             k = hashing.ComputeHash(data).ToPositiveBigInt();
-
             // xor H(N) and H(g)
             var nhash = hashing.ComputeHash(modulusBytes);
             var ghash = hashing.ComputeHash(g.ToByteArray());
@@ -49,7 +48,7 @@ namespace wowarmory.SRP {
             var size = ModulusSize * 2;
             var bytes = new byte[size];
             random.NextBytes(bytes);
-            return (bytes.ToPositiveBigInt() % (modulus - 2)) + 2;
+            return bytes.ToPositiveBigInt() % modulus;
         }
 
         public byte[] GetChallengeA() {
@@ -93,7 +92,7 @@ namespace wowarmory.SRP {
 
         public BigInteger CalculateS(BigInteger B, BigInteger x, BigInteger u) {
             // (B - k * g^x) ^ (a + u * x)
-            return BigInteger.ModPow(B - k * BigInteger.ModPow(g, x, modulus), a + u * x, modulus);
+            return Util.PositiveModPow(B - k * Util.PositiveModPow(g, x, modulus), a + u * x, modulus);
         }
 
         public byte[] CalculateSessionKeyK(BigInteger S) {

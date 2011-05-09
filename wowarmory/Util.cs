@@ -19,6 +19,8 @@ namespace wowarmory {
         }
 
         public static byte[] AdjustSize(this byte[] data, int size) {
+            if (data.Length == size)
+                return data;
             var result = new byte[size];
             Array.Copy(data, result, Math.Min(data.Length, size));
             return result;
@@ -33,6 +35,15 @@ namespace wowarmory {
             return sb.ToString();
         }
 
+        /// <summary>
+        /// C#'s ModPow result takes the sign of the base/divident, but we don't want that, so bring
+        /// the base into the positive here before calling ModPow.
+        /// </summary>
+        public static BigInteger PositiveModPow(BigInteger value, BigInteger exp, BigInteger modulus) {
+            var s = (BigInteger.Abs(value) / modulus) + 1;
+            var new_val = value + s * modulus;
+            return BigInteger.ModPow(new_val, exp, modulus);
+        }
 
         public static string Format(object obj) {
             var builder = new StringBuilder();

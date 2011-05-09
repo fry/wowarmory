@@ -10,17 +10,13 @@ Implemented Features
 At the moment there is only a very basic set of features, but the main hurdle of
 authenticating with the mobile armory server is mostly solved.
 - protocol deserialization into .NET structures
-- SRP authentification (see below)
+- SRP authentification
 - chat-protocol abstraction (see ChatModule)
 - started work on an experimental IRC bot
 
 
 Problems
 --------
-- The SRP authentication fails every now and then and usually requires multiple
-  attempts to conclude. This is probably due to improper (read: different from
-  the way the official mobile armory does it) byte string concatenation, which
-  is important for generating a proper M1 proof for the server.
 - The M2 proof the server sends over is completely unchecked. Not terribly
   important, but for completeness sake should be done at some point.
 - The code and design, even at its current size is a mess

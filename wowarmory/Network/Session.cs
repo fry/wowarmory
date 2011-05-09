@@ -101,13 +101,14 @@ namespace wowarmory.Network {
             }
 
             if (stage == 1 && response.Target == "/authenticate1") {
-                Console.WriteLine("sending client proof");
                 var bbytes = (byte[])response["B"];
                 var salt = (byte[])response["salt"];
                 var user = (byte[])response["user"];
                 var userHash = Encoding.ASCII.GetString(user);
                 var password = FormatPassword();
                 var proof = srp.CalculateAuth1Proof(userHash, password, salt, bbytes);
+
+                Console.WriteLine("sending client proof: " + proof.Length);
                 var request = new Request("/authenticate2");
                 request["clientProof"] = proof;
 
