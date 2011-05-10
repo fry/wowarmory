@@ -10,6 +10,7 @@ namespace wowarmory.Network {
         public delegate void OnMessageDelegate(ChatModule module, Chat.Message message);
         public delegate void OnPresenceDelegate(ChatModule module, Chat.Presence presence);
         public delegate void OnChatLoggedOutDelegate();
+        public delegate void OnLoginFailedDelegate(string reason);
 
         public event OnMessageDelegate OnMessageMOTD;
         public event OnMessageDelegate OnMessageGuildChat;
@@ -18,6 +19,8 @@ namespace wowarmory.Network {
         public event OnChatLoggedOutDelegate OnChatLoggedOut;
 
         public event OnPresenceDelegate OnPresenceChange;
+
+        public event OnLoginFailedDelegate OnLoginFailed;
 
         Session session;
 
@@ -36,6 +39,12 @@ namespace wowarmory.Network {
             session.OnResponseReceived += new Connection.OnResponseReceivedDelegate(OnResponseReceived);
             session.OnSessionEstablished += new Session.OnSessionEstablishedDelegate(OnSessionEstablished);
             session.OnSessionClosed += new Session.OnSessionClosedDelegate(OnSessionClosed);
+            session.OnError += new Session.OnErrorDelegate(OnError);
+        }
+
+        void OnError(Response response) {
+            if (response.Target == "/chat-login" && OnLoginFailed != null)
+                OnLoginFailed((string)response["body"]);
         }
 
 
@@ -59,7 +68,7 @@ namespace wowarmory.Network {
         }
 
     
-        public void OnSessionEstablished() {
+        void OnSessionEstablished() {
             var request = new Request("/chat-login");
             var options = new Dictionary<string, object>();
             options["matureFilter"] = "false";
@@ -72,7 +81,7 @@ namespace wowarmory.Network {
         }
 
 
-        public void OnResponseReceived(Response response) {
+        void OnResponseReceived(Response response) {
             if (response.Target == "/chat-logout") {
                 if (OnChatLoggedOut != null)
                     OnChatLoggedOut();

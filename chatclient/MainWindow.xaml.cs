@@ -63,18 +63,28 @@ namespace chatclient {
                 chat.OnMessageMOTD += msgDele;
                 chat.OnPresenceChange += new ChatModule.OnPresenceDelegate(OnPresenceChange);
                 chat.OnChatLoggedOut += new ChatModule.OnChatLoggedOutDelegate(OnChatLoggedOut);
+
+                chat.OnLoginFailed += new ChatModule.OnLoginFailedDelegate(OnLoginFailed);
             }
 
             session.Start(accountName, password);
             session.OnSessionClosed += new Session.OnSessionClosedDelegate(OnSessionClosed);
+
+            Title = String.Format("Guild Chat ({0}/{1})", characterName, realmName);
+        }
+
+        void OnLoginFailed(string reason) {
+            OnSessionClosed(reason);
+            session.Close();
         }
 
         void OnChatLoggedOut() {
-            session.Close("Logged out of chat");
+            session.Close();
         }
 
         void OnSessionClosed(string reason) {
-            MessageBox.Show("Connection closed: " + reason);
+            if (!String.IsNullOrEmpty(reason))
+                MessageBox.Show("Connection closed: " + reason);
             Dispatcher.BeginInvoke(new Action(Close));
         }
 

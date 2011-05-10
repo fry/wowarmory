@@ -11,10 +11,12 @@ namespace wowarmory.Network {
     public class Session {
         public delegate void OnSessionEstablishedDelegate();
         public delegate void OnSessionClosedDelegate(string reason);
+        public delegate void OnErrorDelegate(Response response);
 
         public event OnSessionEstablishedDelegate OnSessionEstablished;
         public event OnSessionClosedDelegate OnSessionClosed;
         public event Connection.OnResponseReceivedDelegate OnResponseReceived;
+        public event OnErrorDelegate OnError;
 
         public readonly Connection Connection;
         ClientSRP srp;
@@ -94,6 +96,9 @@ namespace wowarmory.Network {
                 var errorMsg = (string)response["body"];
                 Console.WriteLine("error: " + errorMsg);
 
+                if (OnError != null)
+                    OnError(response);
+
                 // If the error happens while initiating the session, close connection
                 if (stage != 4)
                     Connection.Close(errorMsg);
@@ -138,7 +143,7 @@ namespace wowarmory.Network {
         string FormatPassword() {
             var newStr = password;
             if (password.Length > 16)
-                password.Substring(0, 16);
+                password = password.Substring(0, 16);
             return password.ToUpperInvariant();
         }
 
