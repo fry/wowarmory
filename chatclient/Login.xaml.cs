@@ -20,6 +20,12 @@ namespace chatclient {
             InitializeComponent();
 
             DataContext = Properties.Settings.Default;
+
+            Closed += new EventHandler(Login_Closed);
+        }
+
+        void Login_Closed(object sender, EventArgs e) {
+            Environment.Exit(0);
         }
 
         private void Login_Click(object sender, RoutedEventArgs e) {

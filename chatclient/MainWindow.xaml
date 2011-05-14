@@ -11,8 +11,8 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto">
-            <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  IsReadOnly="True" Text="{Binding Path=ChatLog}"/>
+        <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" Name="TextScroll">
+            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Path=ChatLog}" Margin="2"/>
         </ScrollViewer>
         
         <TextBox Name="chatEntry" Grid.Row="1" Grid.Column="0" KeyDown="chatEntry_KeyDown" />

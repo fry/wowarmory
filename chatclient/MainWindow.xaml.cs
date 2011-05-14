@@ -70,7 +70,9 @@ namespace chatclient {
             session.Start(accountName, password);
             session.OnSessionClosed += new Session.OnSessionClosedDelegate(OnSessionClosed);
 
-            Title = String.Format("Guild Chat ({0}/{1})", characterName, realmName);
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var version = assembly.GetName().Version.ToString();
+            Title = String.Format("Guild Chat ({0}/{1}) {2}", characterName, realmName, version);
         }
 
         void OnLoginFailed(string reason) {
@@ -98,20 +100,25 @@ namespace chatclient {
             if (presence.Offline)
                 arrow = "<-";
 
-            chatLog.AppendLine(String.Format("{0} {1} ({2})", arrow, presence.Name, presence.Type));
+            AppendLine(String.Format("{0} {1} ({2})", arrow, presence.Name, presence.Type));
             NotifyPropertyChanged("ChatLog");
         }
 
         void OnMessage(ChatModule module, Message m) {
             if (m.Type == Message.CHAT_MSG_TYPE_GUILD_CHAT || m.Type == Message.CHAT_MSG_TYPE_OFFICER_CHAT) {
-                chatLog.AppendLine(String.Format("<{0}> {1}", m.CharacterName, m.Body));
+                AppendLine(String.Format("<{0}> {1}", m.CharacterName, m.Body));
             } else if (m.Type == Message.CHAT_MSG_TYPE_GUILD_MOTD) {
-                chatLog.AppendLine("MOTD: " + m.Body);
+                AppendLine("MOTD: " + m.Body);
             } else if (m.Type == Message.CHAT_MSG_TYPE_WHISPER) {
-                chatLog.AppendLine(String.Format("whisper <{0}> {1}", m.CharacterName, m.Body));
+                AppendLine(String.Format("whisper <{0}> {1}", m.CharacterName, m.Body));
             }
 
             NotifyPropertyChanged("ChatLog");
+        }
+
+        public void AppendLine(string str) {
+            chatLog.AppendLine(str);
+            TextScroll.Dispatcher.BeginInvoke(new Action(TextScroll.ScrollToBottom));
         }
 
         private void chatEntry_KeyDown(object sender, KeyEventArgs e) {
@@ -122,20 +129,20 @@ namespace chatclient {
                 var tokens = msg.Split(' ');
                 if (tokens[0] == "/whisper" || tokens[0] == "/w") {
                     if (tokens.Length < 3) {
-                        chatLog.AppendLine("Usage: /whisper <target> <message>");
+                        AppendLine("Usage: /whisper <target> <message>");
                     } else {
                         chat.SendWhisper(tokens[1], String.Join(" ", tokens, 2, tokens.Length - 2));
                     }
                 } else if (tokens[0] == "/officer" || tokens[0] == "/o") {
                     if (tokens.Length < 2) {
-                        chatLog.AppendLine("Usage: /officer <message>");
+                        AppendLine("Usage: /officer <message>");
                     } else {
                         chat.SendMessage(String.Join(" ", tokens, 1, tokens.Length - 1), wowarmory.Chat.Message.CHAT_MSG_TYPE_OFFICER_CHAT);
                     }
                 } else {
-                    chatLog.AppendLine("Unknown command: " + tokens[0]);
-                    chatLog.AppendLine("Available commands:");
-                    chatLog.AppendLine("/w, /whisper");
+                    AppendLine("Unknown command: " + tokens[0]);
+                    AppendLine("Available commands:");
+                    AppendLine("/w, /whisper");
                 }
             } else {
                 chat.SendMessage(msg);
