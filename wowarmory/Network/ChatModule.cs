@@ -9,14 +9,15 @@ namespace wowarmory.Network {
     public class ChatModule {
         public delegate void OnMessageDelegate(ChatModule module, Chat.Message message);
         public delegate void OnPresenceDelegate(ChatModule module, Chat.Presence presence);
-        public delegate void OnChatLoggedOutDelegate();
+        public delegate void OnChatLoggedInOutDelegate();
         public delegate void OnLoginFailedDelegate(string reason);
 
         public event OnMessageDelegate OnMessageMOTD;
         public event OnMessageDelegate OnMessageGuildChat;
         public event OnMessageDelegate OnMessageOfficerChat;
         public event OnMessageDelegate OnMessageWhisper;
-        public event OnChatLoggedOutDelegate OnChatLoggedOut;
+        public event OnChatLoggedInOutDelegate OnChatLoggedIn;
+        public event OnChatLoggedInOutDelegate OnChatLoggedOut;
 
         public event OnPresenceDelegate OnPresenceChange;
 
@@ -43,7 +44,7 @@ namespace wowarmory.Network {
         }
 
         void OnError(Response response) {
-            if (response.Target == "/chat-login" && OnLoginFailed != null)
+            if ((response.Target == "/chat-disconnect" || response.Target == "/chat-login") && OnLoginFailed != null)
                 OnLoginFailed((string)response["body"]);
         }
 
@@ -88,6 +89,9 @@ namespace wowarmory.Network {
             } else if (response.Target == "/chat-login") {
                 Console.WriteLine("Logged into chat");
                 chatSessionId = (string)response["chatSessionId"];
+
+                if (OnChatLoggedIn != null)
+                    OnChatLoggedIn();
             } else  if (response.Target == "/chat") {
                 var chatType = (string)response["chatType"];
                 if (chatType == "message_ack") {

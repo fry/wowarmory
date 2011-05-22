@@ -62,7 +62,8 @@ namespace chatclient {
                 chat.OnMessageWhisper += msgDele;
                 chat.OnMessageMOTD += msgDele;
                 chat.OnPresenceChange += new ChatModule.OnPresenceDelegate(OnPresenceChange);
-                chat.OnChatLoggedOut += new ChatModule.OnChatLoggedOutDelegate(OnChatLoggedOut);
+                chat.OnChatLoggedOut += new ChatModule.OnChatLoggedInOutDelegate(OnChatLoggedOut);
+                chat.OnChatLoggedIn += new ChatModule.OnChatLoggedInOutDelegate(OnChatLoggedIn);
 
                 chat.OnLoginFailed += new ChatModule.OnLoginFailedDelegate(OnLoginFailed);
             }
@@ -73,6 +74,12 @@ namespace chatclient {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             var version = assembly.GetName().Version.ToString();
             Title = String.Format("Guild Chat ({0}/{1}) {2}", characterName, realmName, version);
+
+            AppendLine("Logging into chat..");
+        }
+
+        void OnChatLoggedIn() {
+            AppendLine(".. logged in.");
         }
 
         void OnLoginFailed(string reason) {
