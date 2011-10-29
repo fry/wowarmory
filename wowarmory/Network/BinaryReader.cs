@@ -69,6 +69,18 @@ namespace wowarmory.Network {
                     bytes[3];
         }
 
+		public override Int64 ReadInt64() {
+			var bytes = ReadBytes(8);
+			return (bytes[0] << 56) |
+				   (bytes[1] << 48) |
+				   (bytes[2] << 40) |
+				   (bytes[3] << 32) |
+				   (bytes[4] << 24) |
+				   (bytes[5] << 16) |
+				   (bytes[6] << 8) |
+					bytes[7];
+		}
+
         public override string ReadString() {
             var length = ReadInt32();
             return Encoding.Default.GetString(ReadBytes(length));
