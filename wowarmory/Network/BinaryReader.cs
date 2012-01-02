@@ -71,14 +71,16 @@ namespace wowarmory.Network {
 
 		public override Int64 ReadInt64() {
 			var bytes = ReadBytes(8);
-			return (bytes[0] << 56) |
-				   (bytes[1] << 48) |
-				   (bytes[2] << 40) |
-				   (bytes[3] << 32) |
-				   (bytes[4] << 24) |
-				   (bytes[5] << 16) |
-				   (bytes[6] << 8) |
-					bytes[7];
+			var result =
+				   (((Int64)bytes[0]) << 56) |
+				   (((Int64)bytes[1]) << 48) |
+				   (((Int64)bytes[2]) << 40) |
+				   (((Int64)bytes[3]) << 32) |
+				   (((Int64)bytes[4]) << 24) |
+				   (((Int64)bytes[5]) << 16) |
+				   (((Int64)bytes[6]) << 8) |
+					((Int64)bytes[7]);
+			return result;
 		}
 
         public override string ReadString() {
